@@ -4,13 +4,7 @@ import com.opalikhin.webapp.model.Resume;
 
 import java.util.Arrays;
 
-/**
- * Array based storage for Resumes
- */
-public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
-
-    private int size = 0;
+public class ArrayStorage extends AbstractArrayStorage {
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -18,33 +12,24 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        int resumeIdx = getResumeIdx(r.getUuid());
-        if (resumeIdx == -1) {
+        if (getIndex(r.getUuid()) != -1) {
+            System.out.println("ERROR: Resume " + r.getUuid() + " already exists.");
+        } else if (size >= STORAGE_LIMIT) {
+            System.out.println("Storage overflow");
+        } else {
             storage[size] = r;
             size++;
-        } else {
-            System.out.println("ERROR: Resume already exists.");
-        }
-    }
-
-    public Resume get(String uuid) {
-        int resumeIdx = getResumeIdx(uuid);
-        if (resumeIdx >= 0) {
-            return storage[resumeIdx];
-        } else {
-            System.out.println("ERROR: Resume isn't exists.");
-            return null;
         }
     }
 
     public void delete(String uuid) {
-        int resumeIdx = getResumeIdx(uuid);
+        int resumeIdx = getIndex(uuid);
         if (resumeIdx >= 0) {
             storage[resumeIdx] = storage[size - 1];
             storage[size - 1] = null;
             size--;
         } else {
-            System.out.println("ERROR: Resume isn't exists.");
+            System.out.println("ERROR: Resume " + uuid + " doesn't exists.");
         }
     }
 
@@ -55,20 +40,16 @@ public class ArrayStorage {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    public int size() {
-        return size;
-    }
-
     public void update(Resume resume) {
-        int resumeIdx = getResumeIdx(resume.getUuid());
+        int resumeIdx = getIndex(resume.getUuid());
         if (resumeIdx >= 0) {
             storage[resumeIdx] = resume;
         } else {
-            System.out.println("ERROR: Resume isn't exists.");
+            System.out.println("ERROR: Resume " + resume.getUuid() + " doesn't exists.");
         }
     }
 
-    private int getResumeIdx(String uuid) {
+    protected int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;

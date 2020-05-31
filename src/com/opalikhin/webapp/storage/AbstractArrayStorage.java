@@ -37,10 +37,9 @@ public abstract class AbstractArrayStorage implements Storage {
         int resumeIdx = getIndex(uuid);
         if (resumeIdx >= 0) {
             return storage[resumeIdx];
-        } else {
-            System.out.println("ERROR: Resume " + uuid + " doesn't exists.");
-            return null;
         }
+        System.out.println("ERROR: Resume " + uuid + " doesn't exists.");
+        return null;
     }
 
     public int size() {

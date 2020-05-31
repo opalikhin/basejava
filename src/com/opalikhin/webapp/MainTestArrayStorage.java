@@ -32,7 +32,7 @@ public class MainTestArrayStorage {
 
         Resume r5 = new Resume();
         r5.setUuid("uuid2");
-        ARRAY_STORAGE.update(r4);
+        ARRAY_STORAGE.update(r5);
 
         printAll();
         ARRAY_STORAGE.delete(r1.getUuid());

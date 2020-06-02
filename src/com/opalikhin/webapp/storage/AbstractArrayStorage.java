@@ -1,5 +1,8 @@
 package com.opalikhin.webapp.storage;
 
+import com.opalikhin.webapp.exception.ExistStorageException;
+import com.opalikhin.webapp.exception.NotExistStorageException;
+import com.opalikhin.webapp.exception.StorageException;
 import com.opalikhin.webapp.model.Resume;
 
 import java.util.Arrays;
@@ -29,17 +32,16 @@ public abstract class AbstractArrayStorage implements Storage {
         if (resumeIdx >= 0) {
             storage[resumeIdx] = resume;
         } else {
-            System.out.println("ERROR: Resume " + resume.getUuid() + " doesn't exists.");
+            throw new NotExistStorageException(resume.getUuid());
         }
     }
 
     public Resume get(String uuid) {
         int resumeIdx = getIndex(uuid);
-        if (resumeIdx >= 0) {
-            return storage[resumeIdx];
+        if (resumeIdx < 0) {
+            throw new NotExistStorageException(uuid);
         }
-        System.out.println("ERROR: Resume " + uuid + " doesn't exists.");
-        return null;
+        return storage[resumeIdx];
     }
 
     public int size() {
@@ -49,7 +51,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public void delete(String uuid) {
         int delIndex = getIndex(uuid);
         if (delIndex < 0) {
-            System.out.println("ERROR: Resume " + uuid + " doesn't exists.");
+            throw new NotExistStorageException(uuid);
         } else {
             deleteResume(delIndex);
             storage[size - 1] = null;
@@ -60,9 +62,9 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume r) {
         int insIndex = getIndex(r.getUuid());
         if ((insIndex >= 0) && (storage[insIndex].equals(r))) {
-            System.out.println("ERROR: Resume " + r.getUuid() + " already exists.");
+            throw new ExistStorageException(r.getUuid());
         } else if (size >= STORAGE_LIMIT) {
-            System.out.println("Storage overflow");
+            throw new StorageException("Storage overflow", r.getUuid());
         } else {
             saveResume(r, insIndex);
             size++;

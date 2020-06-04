@@ -2,16 +2,7 @@ package com.opalikhin.webapp.storage;
 
 import com.opalikhin.webapp.model.Resume;
 
-public class ArrayStorage extends AbstractArrayStorage {
-    @Override
-    protected void saveResume(Resume r, int insIndex) {
-        storage[size] = r;
-    }
-
-    @Override
-    protected void deleteResume(int delIndex) {
-        storage[delIndex] = storage[size - 1];
-    }
+public final class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected int getIndex(String uuid) {
@@ -22,4 +13,15 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
         return -1;
     }
+
+    @Override
+    protected void deleteElement(int index) {
+        storage[index] = storage[size - 1];
+    }
+
+    @Override
+    protected void saveElement(Resume r, int index) {
+        storage[size] = r;
+    }
+
 }

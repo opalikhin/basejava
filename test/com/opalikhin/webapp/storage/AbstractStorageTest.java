@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public abstract class AbstractStorageTest {
-    protected Storage storage;
+    Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
@@ -43,7 +43,7 @@ public abstract class AbstractStorageTest {
     public void update() {
         Resume r = new Resume(UUID_2);
         storage.update(r);
-        Assert.assertEquals(UUID_2, storage.get(UUID_2).getUuid());
+        Assert.assertEquals(r, storage.get(UUID_2));
         Assert.assertEquals(3, storage.size());
     }
 
@@ -73,9 +73,10 @@ public abstract class AbstractStorageTest {
         storage.delete(UUID_1);
         Assert.assertEquals(2, storage.size());
         try {
-            Assert.assertNull(storage.get(UUID_1));
+            // check resume doesn't exist
+            Resume r = storage.get(UUID_1);
         } catch (NotExistStorageException e) {
-            Assert.assertTrue(true);
+            // valid expected exception
         }
     }
 

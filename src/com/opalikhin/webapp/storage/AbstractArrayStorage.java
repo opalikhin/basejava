@@ -34,12 +34,12 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void updateElement(Resume r, int index) {
+    protected final void updateResume(Resume r, int index) {
         storage[index] = r;
     }
 
     @Override
-    protected final Resume getElement(int index) {
+    protected final Resume getResume(int index) {
         return storage[index];
     }
 

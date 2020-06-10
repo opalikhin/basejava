@@ -3,7 +3,6 @@ package com.opalikhin.webapp.storage;
 import com.opalikhin.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public final class ListStorage extends AbstractStorage {
@@ -12,14 +11,19 @@ public final class ListStorage extends AbstractStorage {
 
     @Override
     protected int getIndex(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        Resume[] searchArray = storage.toArray(new Resume[0]);
-        return Arrays.binarySearch(searchArray, 0, size(), searchKey);
+        int i = 0;
+        for (Resume r : storage) {
+            if (uuid.equals(r.getUuid())) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
     }
 
     @Override
     protected void saveResume(Resume r, int index) {
-        storage.add(-index - 1, r);
+        storage.add(r);
     }
 
     @Override
@@ -28,12 +32,12 @@ public final class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void updateElement(Resume r, int index) {
+    protected void updateResume(Resume r, int index) {
         storage.set(index, r);
     }
 
     @Override
-    protected Resume getElement(int index) {
+    protected Resume getResume(int index) {
         return storage.get(index);
     }
 

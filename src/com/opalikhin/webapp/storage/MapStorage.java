@@ -2,48 +2,42 @@ package com.opalikhin.webapp.storage;
 
 import com.opalikhin.webapp.model.Resume;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-public final class ListStorage extends AbstractStorage {
+public final class MapStorage extends AbstractStorage {
 
-    private final List<Resume> storage = new ArrayList<>();
+    private final Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected boolean isExists(Object key) {
-        return (int) key >= 0;
+        return storage.containsKey(key);
     }
 
     @Override
     protected Object getKey(String uuid) {
-        int i = 0;
-        for (Resume r : storage) {
-            if (uuid.equals(r.getUuid())) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
+        return uuid;
     }
 
     @Override
     protected void saveResume(Resume r, Object key) {
-        storage.add(r);
+        storage.put((String) key, r);
     }
 
     @Override
     protected void deleteResume(Object key) {
-        storage.remove((int) key);
+        storage.remove(key);
     }
 
     @Override
     protected void updateResume(Resume r, Object key) {
-        storage.set((int) key, r);
+        storage.put((String) key, r);
     }
 
     @Override
     protected Resume getResume(Object key) {
-        return storage.get((int) key);
+        return storage.get(key);
     }
 
     @Override
@@ -53,7 +47,8 @@ public final class ListStorage extends AbstractStorage {
 
     @Override
     public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
+        Collection<Resume> list = storage.values();
+        return list.toArray(new Resume[0]);
     }
 
     @Override

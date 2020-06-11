@@ -6,48 +6,52 @@ import com.opalikhin.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Object getKey(String uuid);
 
-    protected abstract void saveResume(Resume r, int index);
+    protected abstract void saveResume(Resume r, Object key);
 
-    protected abstract void deleteResume(int index);
+    protected abstract void deleteResume(Object key);
 
-    protected abstract void updateResume(Resume r, int index);
+    protected abstract void updateResume(Resume r, Object key);
 
-    protected abstract Resume getResume(int index);
+    protected abstract Resume getResume(Object key);
+
+    protected abstract boolean isExists(Object key);
+
+    private void checkExist(Object key, String uuid) {
+        if (!isExists(key)) {
+            throw new NotExistStorageException(uuid);
+        }
+    }
+
+    private void checkNotExist(Object key, String uuid) {
+        if (isExists(key)) {
+            throw new ExistStorageException(uuid);
+        }
+    }
 
     public final void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index >= 0) {
-            updateResume(r, index);
-        } else {
-            throw new NotExistStorageException(r.getUuid());
-        }
+        Object key = getKey(r.getUuid());
+        checkExist(key, r.getUuid());
+        updateResume(r, key);
     }
 
     public final Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-        return getResume(index);
+        Object key = getKey(uuid);
+        checkExist(key, uuid);
+        return getResume(key);
     }
 
     public final void delete(String uuid) {
-        int delIndex = getIndex(uuid);
-        if (delIndex < 0) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            deleteResume(delIndex);
-        }
+        Object key = getKey(uuid);
+        checkExist(key, uuid);
+        deleteResume(key);
     }
 
     public final void save(Resume r) {
-        int insIndex = getIndex(r.getUuid());
-        if (insIndex >= 0) {
-            throw new ExistStorageException(r.getUuid());
-        } else {
-            saveResume(r, insIndex);
-        }
+        Object key = getKey(r.getUuid());
+        checkNotExist(key, r.getUuid());
+        saveResume(r, key);
     }
+
 }

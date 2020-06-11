@@ -7,40 +7,44 @@ import java.util.Arrays;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
-    protected Resume[] storage = new Resume[STORAGE_LIMIT];
-    protected int size = 0;
 
-    protected abstract int getIndex(String uuid);
+    protected final Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected int size = 0;
 
     protected abstract void deleteElement(int index);
 
     protected abstract void saveElement(Resume r, int index);
 
     @Override
-    protected final void saveResume(Resume r, int index) {
+    protected final boolean isExists(Object key) {
+        return (int) key >= 0;
+    }
+
+    @Override
+    protected final void saveResume(Resume r, Object key) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         } else {
-            saveElement(r, index);
+            saveElement(r, (int) key);
             size++;
         }
     }
 
     @Override
-    protected final void deleteResume(int index) {
-        deleteElement(index);
+    protected final void deleteResume(Object key) {
+        deleteElement((int) key);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected final void updateResume(Resume r, int index) {
-        storage[index] = r;
+    protected final void updateResume(Resume r, Object key) {
+        storage[(int) key] = r;
     }
 
     @Override
-    protected final Resume getResume(int index) {
-        return storage[index];
+    protected final Resume getResume(Object key) {
+        return storage[(int) key];
     }
 
     @Override

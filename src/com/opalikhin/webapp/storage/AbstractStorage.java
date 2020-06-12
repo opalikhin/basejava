@@ -6,6 +6,8 @@ import com.opalikhin.webapp.model.Resume;
 
 public abstract class AbstractStorage implements Storage {
 
+    private Object key;
+
     protected abstract Object getKey(String uuid);
 
     protected abstract void saveResume(Resume r, Object key);
@@ -18,39 +20,37 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract boolean isExists(Object key);
 
-    private void checkExist(Object key, String uuid) {
+    private void checkExist(String uuid) {
+        key = getKey(uuid);
         if (!isExists(key)) {
             throw new NotExistStorageException(uuid);
         }
     }
 
-    private void checkNotExist(Object key, String uuid) {
+    private void checkNotExist(String uuid) {
+        key = getKey(uuid);
         if (isExists(key)) {
             throw new ExistStorageException(uuid);
         }
     }
 
     public final void update(Resume r) {
-        Object key = getKey(r.getUuid());
-        checkExist(key, r.getUuid());
+        checkExist(r.getUuid());
         updateResume(r, key);
     }
 
     public final Resume get(String uuid) {
-        Object key = getKey(uuid);
-        checkExist(key, uuid);
+        checkExist(uuid);
         return getResume(key);
     }
 
     public final void delete(String uuid) {
-        Object key = getKey(uuid);
-        checkExist(key, uuid);
+        checkExist(uuid);
         deleteResume(key);
     }
 
     public final void save(Resume r) {
-        Object key = getKey(r.getUuid());
-        checkNotExist(key, r.getUuid());
+        checkNotExist(r.getUuid());
         saveResume(r, key);
     }
 

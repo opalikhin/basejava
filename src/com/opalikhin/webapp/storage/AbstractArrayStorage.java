@@ -4,6 +4,7 @@ import com.opalikhin.webapp.exception.StorageException;
 import com.opalikhin.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
     protected static final int STORAGE_LIMIT = 10000;
@@ -18,6 +19,11 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     @Override
     protected final boolean isExists(Object key) {
         return (int) key >= 0;
+    }
+
+    @Override
+    protected final List<Resume> getList() {
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 
     @Override
@@ -51,11 +57,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     public final void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
-    }
-
-    @Override
-    public final Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
     }
 
     @Override

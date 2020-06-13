@@ -4,6 +4,9 @@ import com.opalikhin.webapp.exception.ExistStorageException;
 import com.opalikhin.webapp.exception.NotExistStorageException;
 import com.opalikhin.webapp.model.Resume;
 
+import java.util.Collections;
+import java.util.List;
+
 public abstract class AbstractStorage implements Storage {
 
     protected abstract Object getKey(String uuid);
@@ -17,6 +20,8 @@ public abstract class AbstractStorage implements Storage {
     protected abstract Resume getResume(Object key);
 
     protected abstract boolean isExists(Object key);
+
+    protected abstract List<Resume> getList();
 
     private Object getExistKey(String uuid) {
         Object key = getKey(uuid);
@@ -52,6 +57,12 @@ public abstract class AbstractStorage implements Storage {
     public final void save(Resume r) {
         Object notExistKey = getNotExistKey(r.getUuid());
         saveResume(r, notExistKey);
+    }
+
+    public final List<Resume> getAllSorted() {
+        List<Resume> list = getList();
+        Collections.sort(list);
+        return list;
     }
 
 }

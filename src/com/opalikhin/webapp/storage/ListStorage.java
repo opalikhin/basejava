@@ -15,6 +15,11 @@ public final class ListStorage extends AbstractStorage {
     }
 
     @Override
+    protected List<Resume> getList() {
+        return new ArrayList<>(storage);
+    }
+
+    @Override
     protected Object getKey(String uuid) {
         int i = 0;
         for (Resume r : storage) {
@@ -49,11 +54,6 @@ public final class ListStorage extends AbstractStorage {
     @Override
     public void clear() {
         storage.clear();
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return storage.toArray(new Resume[0]);
     }
 
     @Override

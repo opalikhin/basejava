@@ -16,12 +16,12 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         int i = storage.size();
         try {
             while (i < AbstractArrayStorage.STORAGE_LIMIT) {
-                storage.save(new Resume());
+                storage.save(new Resume("fullName"));
                 i++;
             }
         } catch (StorageException e) {
             Assert.fail();
         }
-        storage.save(new Resume());
+        storage.save(new Resume("fullName"));
     }
 }

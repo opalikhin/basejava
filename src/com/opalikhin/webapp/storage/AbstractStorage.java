@@ -19,25 +19,9 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract Resume getResume(Object key);
 
-    protected abstract boolean isExists(Object key);
+    protected abstract boolean isExist(Object key);
 
     protected abstract List<Resume> getList();
-
-    private Object getExistKey(String uuid) {
-        Object key = getKey(uuid);
-        if (!isExists(key)) {
-            throw new NotExistStorageException(uuid);
-        }
-        return key;
-    }
-
-    private Object getNotExistKey(String uuid) {
-        Object key = getKey(uuid);
-        if (isExists(key)) {
-            throw new ExistStorageException(uuid);
-        }
-        return key;
-    }
 
     public final void update(Resume r) {
         Object existKey = getExistKey(r.getUuid());
@@ -63,6 +47,22 @@ public abstract class AbstractStorage implements Storage {
         List<Resume> list = getList();
         Collections.sort(list);
         return list;
+    }
+
+    private Object getExistKey(String uuid) {
+        Object key = getKey(uuid);
+        if (!isExist(key)) {
+            throw new NotExistStorageException(uuid);
+        }
+        return key;
+    }
+
+    private Object getNotExistKey(String uuid) {
+        Object key = getKey(uuid);
+        if (isExist(key)) {
+            throw new ExistStorageException(uuid);
+        }
+        return key;
     }
 
 }

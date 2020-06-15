@@ -17,7 +17,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void saveElement(Resume r, int index);
 
     @Override
-    protected final boolean isExists(Object key) {
+    protected final boolean isExist(Object key) {
         return (int) key >= 0;
     }
 

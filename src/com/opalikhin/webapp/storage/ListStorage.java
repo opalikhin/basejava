@@ -5,13 +5,13 @@ import com.opalikhin.webapp.model.Resume;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ListStorage extends AbstractStorage {
+public final class ListStorage extends AbstractStorage<Integer> {
 
     private final List<Resume> storage = new ArrayList<>();
 
     @Override
-    protected boolean isExist(Object key) {
-        return (int) key >= 0;
+    protected boolean isExist(Integer key) {
+        return key >= 0;
     }
 
     @Override
@@ -20,7 +20,7 @@ public final class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected Object getKey(String uuid) {
+    protected Integer getKey(String uuid) {
         int i = 0;
         for (Resume r : storage) {
             if (uuid.equals(r.getUuid())) {
@@ -32,23 +32,23 @@ public final class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveResume(Resume r, Object key) {
+    protected void saveResume(Resume r, Integer key) {
         storage.add(r);
     }
 
     @Override
-    protected void deleteResume(Object key) {
-        storage.remove((int) key);
+    protected void deleteResume(Integer key) {
+        storage.remove(key.intValue());
     }
 
     @Override
-    protected void updateResume(Resume r, Object key) {
-        storage.set((int) key, r);
+    protected void updateResume(Resume r, Integer key) {
+        storage.set(key, r);
     }
 
     @Override
-    protected Resume getResume(Object key) {
-        return storage.get((int) key);
+    protected Resume getResume(Integer key) {
+        return storage.get(key);
     }
 
     @Override

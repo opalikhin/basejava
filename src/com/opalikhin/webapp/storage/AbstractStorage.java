@@ -6,60 +6,70 @@ import com.opalikhin.webapp.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<SK> implements Storage {
 
-    protected abstract Object getKey(String uuid);
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
-    protected abstract void saveResume(Resume r, Object key);
+    protected abstract SK getKey(String uuid);
 
-    protected abstract void deleteResume(Object key);
+    protected abstract void saveResume(Resume r, SK key);
 
-    protected abstract void updateResume(Resume r, Object key);
+    protected abstract void deleteResume(SK key);
 
-    protected abstract Resume getResume(Object key);
+    protected abstract void updateResume(Resume r, SK key);
 
-    protected abstract boolean isExist(Object key);
+    protected abstract Resume getResume(SK key);
+
+    protected abstract boolean isExist(SK key);
 
     protected abstract List<Resume> getList();
 
     public final void update(Resume r) {
-        Object existKey = getExistKey(r.getUuid());
+        LOG.info("Update " + r);
+        SK existKey = getExistKey(r.getUuid());
         updateResume(r, existKey);
     }
 
     public final Resume get(String uuid) {
-        Object existKey = getExistKey(uuid);
+        LOG.info("Get " + uuid);
+        SK existKey = getExistKey(uuid);
         return getResume(existKey);
     }
 
     public final void delete(String uuid) {
-        Object existKey = getExistKey(uuid);
+        LOG.info("Delete " + uuid);
+        SK existKey = getExistKey(uuid);
         deleteResume(existKey);
     }
 
     public final void save(Resume r) {
-        Object notExistKey = getNotExistKey(r.getUuid());
+        LOG.info("Save " + r);
+        SK notExistKey = getNotExistKey(r.getUuid());
         saveResume(r, notExistKey);
     }
 
     public final List<Resume> getAllSorted() {
+        LOG.info("getAllSorted");
         List<Resume> list = getList();
         Collections.sort(list);
         return list;
     }
 
-    private Object getExistKey(String uuid) {
-        Object key = getKey(uuid);
+    private SK getExistKey(String uuid) {
+        SK key = getKey(uuid);
         if (!isExist(key)) {
+            LOG.warning("Resume " + uuid + " not exist");
             throw new NotExistStorageException(uuid);
         }
         return key;
     }
 
-    private Object getNotExistKey(String uuid) {
-        Object key = getKey(uuid);
+    private SK getNotExistKey(String uuid) {
+        SK key = getKey(uuid);
         if (isExist(key)) {
+            LOG.warning("Resume " + uuid + " already exist");
             throw new ExistStorageException(uuid);
         }
         return key;

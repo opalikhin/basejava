@@ -6,7 +6,7 @@ import com.opalikhin.webapp.model.Resume;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -17,8 +17,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected abstract void saveElement(Resume r, int index);
 
     @Override
-    protected final boolean isExist(Object key) {
-        return (int) key >= 0;
+    protected final boolean isExist(Integer key) {
+        return key >= 0;
     }
 
     @Override
@@ -27,30 +27,30 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected final void saveResume(Resume r, Object key) {
+    protected final void saveResume(Resume r, Integer key) {
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage overflow", r.getUuid());
         } else {
-            saveElement(r, (int) key);
+            saveElement(r, key);
             size++;
         }
     }
 
     @Override
-    protected final void deleteResume(Object key) {
-        deleteElement((int) key);
+    protected final void deleteResume(Integer key) {
+        deleteElement(key);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected final void updateResume(Resume r, Object key) {
-        storage[(int) key] = r;
+    protected final void updateResume(Resume r, Integer key) {
+        storage[key] = r;
     }
 
     @Override
-    protected final Resume getResume(Object key) {
-        return storage[(int) key];
+    protected final Resume getResume(Integer key) {
+        return storage[key];
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.opalikhin.webapp.model;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,6 +13,26 @@ public class Resume implements Comparable<Resume> {
     private final String uuid;
 
     private final String fullName;
+
+    public Map<ContactType, Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Map<ContactType, Contact> contacts) {
+        this.contacts = contacts;
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
+    }
+
+    public void setSections(Map<SectionType, AbstractSection> sections) {
+        this.sections = sections;
+    }
+
+    private Map<ContactType, Contact> contacts;
+
+    private Map<SectionType, AbstractSection> sections;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);

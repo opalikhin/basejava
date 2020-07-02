@@ -1,5 +1,6 @@
 package com.opalikhin.webapp.model;
 
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -14,25 +15,9 @@ public class Resume implements Comparable<Resume> {
 
     private final String fullName;
 
-    public Map<ContactType, Contact> getContacts() {
-        return contacts;
-    }
+    private final Map<ContactType, Contact> contacts = new EnumMap<>(ContactType.class);
 
-    public void setContacts(Map<ContactType, Contact> contacts) {
-        this.contacts = contacts;
-    }
-
-    public Map<SectionType, AbstractSection> getSections() {
-        return sections;
-    }
-
-    public void setSections(Map<SectionType, AbstractSection> sections) {
-        this.sections = sections;
-    }
-
-    private Map<ContactType, Contact> contacts;
-
-    private Map<SectionType, AbstractSection> sections;
+    private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -51,24 +36,34 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
+    public Map<ContactType, Contact> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, AbstractSection> getSections() {
+        return sections;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Resume resume = (Resume) o;
-
-        return uuid.equals(resume.uuid);
+        return uuid.equals(resume.uuid) &&
+                fullName.equals(resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        return Objects.hash(uuid, fullName);
     }
 
     @Override
     public String toString() {
-        return uuid;
+        return "Resume{" +
+                "uuid='" + uuid + '\'' +
+                ", fullName='" + fullName + '\'' +
+                '}';
     }
 
     @Override

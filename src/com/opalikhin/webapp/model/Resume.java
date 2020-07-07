@@ -15,7 +15,7 @@ public class Resume implements Comparable<Resume> {
 
     private final String fullName;
 
-    private final Map<ContactType, Contact> contacts = new EnumMap<>(ContactType.class);
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     private final Map<SectionType, AbstractSection> sections = new EnumMap<>(SectionType.class);
 
@@ -24,6 +24,8 @@ public class Resume implements Comparable<Resume> {
     }
 
     public Resume(String uuid, String fullName) {
+        Objects.requireNonNull(uuid, "uuid must not be null");
+        Objects.requireNonNull(fullName, "fullName must not be null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
@@ -36,7 +38,7 @@ public class Resume implements Comparable<Resume> {
         return fullName;
     }
 
-    public Map<ContactType, Contact> getContacts() {
+    public Map<ContactType, String> getContacts() {
         return contacts;
     }
 

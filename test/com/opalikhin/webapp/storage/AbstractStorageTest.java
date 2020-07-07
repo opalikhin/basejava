@@ -1,5 +1,6 @@
 package com.opalikhin.webapp.storage;
 
+import com.opalikhin.webapp.ResumeTestData;
 import com.opalikhin.webapp.exception.ExistStorageException;
 import com.opalikhin.webapp.exception.NotExistStorageException;
 import com.opalikhin.webapp.model.Resume;
@@ -24,9 +25,9 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_3;
 
     static {
-        RESUME_1 = new Resume(UUID_1, "fullName1");
-        RESUME_2 = new Resume(UUID_2, "fullName2");
-        RESUME_3 = new Resume(UUID_3, "fullName3");
+        RESUME_1 = ResumeTestData.createTestResume(UUID_1);
+        RESUME_2 = ResumeTestData.createTestResume(UUID_2);
+        RESUME_3 = ResumeTestData.createTestResume(UUID_3);
     }
 
     public AbstractStorageTest(Storage storage) {
@@ -55,7 +56,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume r = new Resume(UUID_2, "fullName2");
+        Resume r = ResumeTestData.createTestResume(UUID_2);
         storage.update(r);
         assertEquals(r, storage.get(UUID_2));
         assertEquals(3, storage.size());
@@ -63,13 +64,13 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExists() {
-        Resume r = new Resume(DUMMY, "dummy");
+        Resume r = ResumeTestData.createTestResume(DUMMY);
         storage.update(r);
     }
 
     @Test
     public void get() {
-        assertEquals(new Resume(UUID_2, "fullName2"), storage.get(UUID_2));
+        assertEquals(ResumeTestData.createTestResume(UUID_2), storage.get(UUID_2));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -101,7 +102,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void save() {
-        Resume r = new Resume("fullName");
+        Resume r = ResumeTestData.createTestResume(null);
         storage.save(r);
         assertEquals(4, storage.size());
         assertEquals(r, storage.get(r.getUuid()));
@@ -109,7 +110,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = ExistStorageException.class)
     public void saveExist() {
-        storage.save(new Resume(UUID_3, "fullName3"));
+        storage.save(ResumeTestData.createTestResume(UUID_3));
     }
 
 }
